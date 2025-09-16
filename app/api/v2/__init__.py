@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restx import Api
 
 from .echo import api as api_echo
+from .greet import api as api_greet
 
 
 api_bp = Blueprint("v2", __name__, url_prefix="/api/v2")
@@ -14,3 +15,4 @@ api = Api(
 )
 
 api.add_namespace(api_echo)
+api.add_namespace(api_greet)

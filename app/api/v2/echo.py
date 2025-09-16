@@ -7,8 +7,8 @@ api = Namespace("echo", description="Simple echo")
 
 
 @api.route("/<string:msg>")
-class UsersResources(Resource):
-    @api.doc("list_users")
+class EchoResources(Resource):
+    @api.doc("echo")
     def get(self, msg):
         return {
             "msg": msg
