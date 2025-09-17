@@ -1,15 +1,15 @@
 from flask import Flask
-from app.api.v2 import api_bp as api_v2_blueprint
+
+from app.blueprints.api.v2 import api_bp as api_v2_blueprint
+from app.blueprints.posts.blueprint import posts_bp
 
 
-app = Flask(__name__)
-app.register_blueprint(api_v2_blueprint)
+def create_app():
+    from flask_cors import CORS
+    app = Flask(__name__)
+    app.config.from_object("app.settings")
+    app.register_blueprint(api_v2_blueprint)
+    app.register_blueprint(posts_bp, url_prefix="/blog")
 
-
-@app.route("/")
-def index():
-    return "<h1>Test from flask app</h1>"
-
-
-if __name__ == "__main__":
-    app.run()
+    CORS(app)
+    return app
