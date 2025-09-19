@@ -1,4 +1,4 @@
-import arrow
+import time
 from flask_restx import Namespace, Resource, abort, reqparse
 
 
@@ -9,7 +9,7 @@ api = Namespace("timetrack", description="Time track")
 class StartResources(Resource):
     @api.doc("start")
     def post(self):
-        request_start_time = arrow.utcnow().isoformat()
+        request_start_time = time.time()
         return {
             "ts": request_start_time
         }
@@ -19,7 +19,7 @@ class StartResources(Resource):
 class StopResources(Resource):
     @api.doc("stop")
     def post(self):
-        request_stop_time = arrow.utcnow().isoformat()
+        request_stop_time = time.time()
         return {
             "ts": request_stop_time
         }

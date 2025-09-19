@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Time track page
+{% endblock %}
+
+{% block content_title %}
+    Time track page
+{% endblock %}
+button
+{% block style %}
+    ul.horizontal-list {
+      list-style: none;        /* убираем маркеры */
+      padding: 0;
+      margin: 0;
+      display: flex;           /* выстраиваем элементы в строку */
+      gap: 20px;               /* расстояние между элементами */
+    }
+
+    ul.horizontal-list li {
+      background-color: #f2f2f2;
+      padding: 10px 15px;
+      border-radius: 5px;
+    }
+
+    .my-button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .my-button.active {
+        background-color: #e74c3c; /* Красный */
+    }
+
+    #output {
+      margin-top: 20px;
+      font-family: monospace;
+      font-size: 16px;
+    }
+
+
+<style>
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+  <ul class="horizontal-list">
+    <li>Day 1</li>
+    <li>Day 2</li>
+    <li>Day 3</li>
+    <li>Day 4</li>
+    <li>Day 5</li>
+    <li>Day 6</li>
+    <li>Day 7</li>
+  </ul>
+</div>
+
+<button class="my-button" id="trackBtn">Start</button>
+<div id="output"></div>
+
+{% endblock %}
+
+{% block script %}
+/* 
+const button = document.getElementById('trackBtn');
+const output = document.getElementById('output');
+
+let tracking = false; // false = остановлено
+let startTs = null;
+let stopTs = null;
+
+button.addEventListener('click', function () {
+  const isStarting = !tracking;
+  const url = isStarting
+    ? 'http://localhost:5000/api/v2/timetrack/start'
+    : 'http://localhost:5000/api/v2/timetrack/stop';
+
+  fetch(url, { method: 'POST' })
+    .then(response => {
+      if (!response.ok) throw new Error('Ошибка: ' + response.status);
+      return response.json();
+    })
+    .then(data => {
+      console.log('Полученный ts:', data.ts);
+      const ts = data.ts; 
+
+      if (!ts) throw new Error('ts field not found');
+
+      if (isStarting) {
+        startTs = ts;
+        output.textContent = `Started at : ${formatTime(ts)}`;
+      } else {
+        stopTs = ts;
+        const duration = (stopTs - startTs) * 1000;
+        output.textContent =
+          `Stopped at : ${formatTime(ts)}\n` +
+          `Duration   : ${formatDuration(duration)}`;
+      }
+
+      tracking = isStarting; // Обновляем состояние!
+
+      button.textContent = tracking ? 'Стоп' : 'Старт';
+      button.classList.toggle('active', tracking);
+    })
+    .catch(error => {
+      console.error('Ошибка запроса:', error);
+      alert('Ошибка при обращении к серверу');
+    });
+});
+
+// Преобразует timestamp (в секундах) в hh:mm:ss
+function formatTime(ts) {
+  const date = new Date(Number(ts) * 1000);
+  return date.toLocaleTimeString();
+}
+
+function formatDuration(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+function pad(n) {
+  return n.toString().padStart(2, '0');
+} */
+
+
+
+const button = document.getElementById('trackBtn');
+const output = document.getElementById('output');
+
+let tracking = false; // false = остановлено
+let startTs = null;
+let stopTs = null;
+let timerInterval = null;
+
+button.addEventListener('click', function () {
+  const isStarting = !tracking;
+  const url = isStarting
+    ? 'http://localhost:5000/api/v2/timetrack/start'
+    : 'http://localhost:5000/api/v2/timetrack/stop';
+
+  fetch(url, { method: 'POST' })
+    .then(response => {
+      if (!response.ok) throw new Error('Ошибка: ' + response.status);
+      return response.json();
+    })
+    .then(data => {
+      const ts = data.ts;
+      if (!ts) throw new Error('ts field not found');
+
+      if (isStarting) {
+        startTs = ts;
+        output.textContent = `Started at : ${formatTime(ts)}`;
+
+        // Запускаем интервал обновления тикающего времени
+        timerInterval = setInterval(() => {
+          const now = Math.floor(Date.now() / 1000); // текущее время в секундах
+          const elapsed = (now - startTs) * 1000; // в миллисекундах
+          output.textContent =
+            `Started at : ${formatTime(startTs)}\n` +
+            `Elapsed    : ${formatDuration(elapsed)}`;
+        }, 1000);
+      } else {
+        stopTs = ts;
+        clearInterval(timerInterval); // останавливаем тиканье
+        const duration = (stopTs - startTs) * 1000;
+        output.textContent =
+          `Stopped at : ${formatTime(ts)}\n` +
+          `Duration   : ${formatDuration(duration)}`;
+      }
+
+      tracking = isStarting;
+      button.textContent = tracking ? 'Стоп' : 'Старт';
+      button.classList.toggle('active', tracking);
+    })
+    .catch(error => {
+      console.error('Ошибка запроса:', error);
+      alert('Ошибка при обращении к серверу');
+    });
+});
+
+// Преобразует timestamp (в секундах) в hh:mm:ss
+function formatTime(ts) {
+  const date = new Date(Number(ts) * 1000);
+  return date.toLocaleTimeString();
+}
+
+function formatDuration(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+function pad(n) {
+  return n.toString().padStart(2, '0');
+}
+
+{% endblock %}
