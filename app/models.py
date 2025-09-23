@@ -1,19 +1,31 @@
-from datetime import datetime
+# from app.app import db
+# from datetime import datetime
+
+
+# class Post(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     title = db.Column(db.String(140))
+#     slug = db.Column(db.String(140), unique=True)
+#     body = db.Column(db.Text)
+#     created = db.Column(db.DateTime, default=datetime.now())
+
+#     def __init__(self, *args, **kwargs):
+#         super(Post, self).__init__(*args, **kwargs)
 
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy import BaseQuery
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column
 
 
-db = SQLAlchemy(query_class=BaseQuery)
+class Base(DeclarativeBase):
+    pass
 
 
+db = SQLAlchemy(model_class=Base)
 
-class Operation(db.Model):
-    __tablename__ = "operation"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32))
-    op = db.Column(db.String(32))
-    category = db.Column(db.String(32))
-    timestamp = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+
+class User(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(unique=True)
+    email: Mapped[str]

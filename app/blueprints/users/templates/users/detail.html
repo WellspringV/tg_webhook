@@ -1,0 +1,12 @@
+<!-- templates/user/detail.html -->
+{% extends "base.html" %}
+
+{% block title %}User Detail{% endblock %}
+{% block header %}User: {{ user.username }}{% endblock %}
+
+{% block content %}
+<p><strong>Email:</strong> {{ user.email }}</p>
+
+<a href="{{ url_for('users.user_delete', id=user.id) }}" class="btn btn-danger">Delete User</a>
+<a href="{{ url_for('users.user_list') }}" class="btn btn-secondary">Back to List</a>
+{% endblock %}

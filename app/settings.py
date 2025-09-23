@@ -4,5 +4,5 @@ env = Env()
 env.read_env()
 
 
-with env.prefixed("BOT"):
-    BOT_TOKEN = env.str("BOT_TOKEN", default="")
+with env.prefixed("APP_"):
+    SQLALCHEMY_DATABASE_URI = env.str("SQLALCHEMY_DATABASE_URI")
