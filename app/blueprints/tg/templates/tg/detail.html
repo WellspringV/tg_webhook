@@ -1,0 +1,18 @@
+<!-- templates/tg/detail.html -->
+{% extends "base.html" %}
+
+{% block title %}Message Detail{% endblock %}
+{% block header %}Message: {{ msg.username }}{% endblock %}
+
+{% block content %}
+
+<p><strong>Username:</strong> {{ msg.username }}</p>
+<div>
+    <small class="text-muted">({{ msg.date }})</small>
+</div>
+<div>
+    <small class="text-muted">({{ msg.date }})</small>
+</div>
+
+<a href="{{ url_for('tg.messages_list') }}" class="btn btn-secondary">Back to List</a>
+{% endblock %}

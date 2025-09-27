@@ -5,11 +5,17 @@ from flask import render_template, request, jsonify
 from app.models import db, Message
 
 
-tg_bp = Blueprint("webhook", __name__, template_folder="templates")
+tg_bp = Blueprint("tg", __name__, template_folder="templates")
 
 
-@tg_bp.route("/", methods=["GET", "POST"])
-def index():
+@tg_bp.route("/")
+def messages_list():
+    msgs = db.session.execute(db.select(Message).order_by(Message.username)).scalars()
+    return render_template("tg/list.html", msgs=msgs)
+
+
+@tg_bp.route("/webhook", methods=["GET", "POST"])
+def webhook():
     if request.method == "POST":
         r = request.get_json()
 
@@ -23,3 +29,9 @@ def index():
         db.session.commit()
 
         return jsonify(r)
+
+
+@tg_bp.route("/<int:id>")
+def msg_detail(id):
+    msg = db.get_or_404(Message, id)
+    return render_template("tg/detail.html", msg=msg)
