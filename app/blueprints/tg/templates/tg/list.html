@@ -11,7 +11,7 @@
 
             <div>
                 <small class="text-muted">{{ msg.date }} |</small>
-                <small class="text-muted">{{ msg.username }} |</small>
+                <small class="text-muted">{{ msg.username }} :</small>
                 <small class="text-muted">{{ msg.text }}</small>
             </div>
             <a href="{{ url_for('tg.msg_detail', id=msg.id) }}">Show details</a>
