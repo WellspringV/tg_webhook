@@ -16,7 +16,7 @@ def create_app():
     app.register_blueprint(api_v2_blueprint)
     app.register_blueprint(timetrack_bp)
     app.register_blueprint(users_bp, url_prefix="/users")
-    app.register_blueprint(tg_bp, url_prefix="/webhook")
+    app.register_blueprint(tg_bp, url_prefix="/tg")
 
     CORS(app)
 
