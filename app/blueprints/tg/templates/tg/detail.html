@@ -6,9 +6,11 @@
 
 {% block content %}
 
+<p>Date: <strong>{{ msg.date }}</strong></p>
 <p>Username: <strong>{{ msg.username }}</strong> </p>
 <p>Text: <strong>{{ msg.text }}</strong></p>
-<p>Date: <strong>{{ msg.date }}</strong></p>
+
 
 <a href="{{ url_for('tg.messages_list') }}" class="btn btn-secondary">Back to List</a>
 {% endblock %}
+s
